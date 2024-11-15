@@ -4,6 +4,7 @@ import Link from "next/link";
 
 async function Navbar() {
   const session = await auth();
+  console.log({ session });
 
   return (
     <div className="px-5 py-3 bg-white shadow-sm font-work-sans">
@@ -31,7 +32,7 @@ async function Navbar() {
                 </button>
               </form>
 
-              <Link href={`/user/${session.user.id}`}>
+              <Link href={`/user/${session?.id}`}>
                 <span>{session?.user?.name}</span>
               </Link>
             </>

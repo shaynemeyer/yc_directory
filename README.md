@@ -10,3 +10,8 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+---
+## What we use
+
+- [`markdown-it](https://www.npmjs.com/package/markdown-it) - Markdown parser.

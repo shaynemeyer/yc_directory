@@ -40,8 +40,8 @@ function StartupCard({ post }: { post: StartupTypeCard }) {
         </div>
         <Link href={`/user/${author?._id}`}>
           <Image
-            src="https://placehold.co/48x48"
-            alt="placeholder"
+            src={author?.image as string}
+            alt={author?.name as string}
             className="rounded-full"
             width={48}
             height={48}

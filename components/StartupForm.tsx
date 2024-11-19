@@ -5,18 +5,20 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import MDEditor from "@uiw/react-md-editor";
 import { useToast } from "@/hooks/use-toast";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { Send } from "lucide-react";
 import { formSchema } from "@/lib/validation";
 import { z } from "zod";
+import { createPitch } from "@/lib/actions";
 
 function StartupForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [pitch, setPitch] = useState("");
   const { toast } = useToast();
-  //   const router = useRouter();
+  const router = useRouter();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFormSubmit = async (prevState: any, formData: FormData) => {
     try {
       const formValues = {
@@ -29,21 +31,18 @@ function StartupForm() {
 
       await formSchema.parseAsync(formValues);
 
-      console.log(formValues);
+      const result = await createPitch(prevState, formData, pitch);
 
-      // const result = await createIdea(prevState, formData, pitch);
-      // console.log(result);
+      if (result.status == "SUCCESS") {
+        toast({
+          title: "Success",
+          description: "Your startup pitch has been created successfully",
+        });
 
-      //   if (result.status == "SUCCESS") {
-      //     toast({
-      //       title: "Success",
-      //       description: "Your startup pitch has been created successfully",
-      //     });
+        router.push(`/startup/${result._id}`);
+      }
 
-      //     router.push(`/startup/${result._id}`);
-      //   }
-
-      //   return result;
+      return result;
     } catch (error) {
       if (error instanceof z.ZodError) {
         const fieldErrors = error.flatten().fieldErrors;
@@ -72,13 +71,14 @@ function StartupForm() {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [state, formAction, isPending] = useActionState(handleFormSubmit, {
     error: "",
     status: "INITIAL",
   });
 
   return (
-    <form action={() => {}} className="startup-form">
+    <form action={formAction} className="startup-form">
       <div>
         <label htmlFor="title" className="startup-form_label">
           Title
